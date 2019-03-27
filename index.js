@@ -1,13 +1,41 @@
 const http = require('http');
 const fs = require('fs');
+const express = require('express');
+const chromeLauncher = require('chrome-launcher');
+const app = express();
+const port = 4000;
 
-var pages = [2595625581, 2595625588, 2595625594, 2595625600, 2595625606, 2595625612, 2595625618, 2595625624, 2595625630, 2595625626, 2595625620, 2595625614, 2595625608];
-var ticket = "93f7e8b6-40ec-4be1-a61f-a103cd9cfb63";
-var session_id = "b7047b3db02812810a5cc717040a";
+var chrome = chromeLauncher.launch({
+  startingUrl: 'http://localhost:4000'
+}).then(chrome => {
+  console.log(`Chrome debugging port running on ${chrome.port}`);
 
-for (var i = 0; i < pages.length; i++) {
-  const file = fs.createWriteStream("./pages/" + pages[i] + ".pdf");
-  const request = http.get("http://hj1.hjedesign.com/eDesignServices/RenderPDFServlet/2-3.pdf?v=53.0.55.2&ticketid=" + ticket + "&command=render[spreadid=" + pages[i] + ",hires]&svg=null&JSESSIONID=" + session_id, function(response) {
-    response.pipe(file);
+  app.use(express.static('public'));
+
+  app.set('view engine', 'ejs');
+
+  app.get('/', function (req, res) {
+    res.render('index');
   });
-}
+
+  app.get('/kill', function (req, res) {
+    chrome.kill();
+    process.exit();
+  });
+
+  app.post('/run', express.urlencoded({ extended: true }), function (req, res) {
+    var pages = req.body.pages.split(',');
+    for (var i = 0; i < pages.length; i++) {
+      const file = fs.createWriteStream(req.body.path + pages[i] + ".pdf");
+      const request = http.get("http://hj1.hjedesign.com/eDesignServices/RenderPDFServlet/file.pdf?ticketid=" + req.body.ticket + "&command=render[spreadid=" + pages[i] + ",hires]&svg=null&JSESSIONID=" + req.body.session_id, function(response) {
+        response.pipe(file);
+
+      });
+    }
+    res.render('done');
+  });
+  
+  app.listen(port, () => console.log(`App listening on port ${port}!`));
+
+//chrome
+});
