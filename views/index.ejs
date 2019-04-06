@@ -33,3 +33,45 @@
 </body>
 
 </html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).on('paste', 'textarea#pages', function(e) {
+      e.preventDefault();
+      var cb;
+      var clipText = '';
+      if (window.clipboardData && window.clipboardData.getData) {
+        cb = window.clipboardData;
+        clipText = cb.getData('Text');
+      } else if (e.clipboardData && e.clipboardData.getData) {
+        cb = e.clipboardData;
+        clipText = cb.getData('text/plain');
+      } else {
+        cb = e.originalEvent.clipboardData;
+        clipText = cb.getData('text/plain');
+      }
+      var clipRows = clipText.split('\n');
+      for (i = 0; i < clipRows.length; i++) {
+        clipRows[i] = clipRows[i].split('\t');
+      }
+      var jsonObj = [];
+      for (i = 0; i < clipRows.length - 1; i++) {
+        var item = {};
+        for (j = 0; j < clipRows[i].length; j++) {
+          if (clipRows[i][j] != '\r') {
+            if (clipRows[i][j].length !== 0) {
+              item[j] = clipRows[i][j];
+            }
+          }
+        }
+        jsonObj.push(item);
+      }
+      for (var i = 0; i < jsonObj.length; i++) {
+        if ((jsonObj.length-1) == i) {
+          $('#pages').val($('#pages').val()+jsonObj[i][0]);
+        } else {
+          $('#pages').val($('#pages').val()+jsonObj[i][0]+",");
+        }
+      }
+    });
+</script>
