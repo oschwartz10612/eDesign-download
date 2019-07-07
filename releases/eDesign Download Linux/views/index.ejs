@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" type="image/png" href="https://cassw.herffjones.com/favicon-32x32.png">
+  <title>eDesign Downloader</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+  <!-- Custom styles for this template -->
+  <link href="index.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+  <form class="form-signin" method="post" action="/run">
+    <img class="mb-4" src="herff-jones-squarelogo.png" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Please enter info</h1>
+    <label for="inputEmail" class="sr-only">Ticket</label>
+    <input class="form-control" placeholder="Ticket" name="ticket" required autofocus>
+    <label for="inputPassword" class="sr-only">Session</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Session" name="session_id" required>
+    <hr class="my-4">
+    <input class="form-control" placeholder="File path" name="path" value="./downloads/" required>
+    <textarea class="form-control" rows="4" name="pages" id="pages" placeholder="Pages" required></textarea>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Run</button>
+  </form>
+</body>
+
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).on('paste', 'textarea#pages', function(e) {
+      e.preventDefault();
+      var cb;
+      var clipText = '';
+      if (window.clipboardData && window.clipboardData.getData) {
+        cb = window.clipboardData;
+        clipText = cb.getData('Text');
+      } else if (e.clipboardData && e.clipboardData.getData) {
+        cb = e.clipboardData;
+        clipText = cb.getData('text/plain');
+      } else {
+        cb = e.originalEvent.clipboardData;
+        clipText = cb.getData('text/plain');
+      }
+      var clipRows = clipText.split('\n');
+      for (i = 0; i < clipRows.length; i++) {
+        clipRows[i] = clipRows[i].split('\t');
+      }
+      var jsonObj = [];
+      for (i = 0; i < clipRows.length - 1; i++) {
+        var item = {};
+        for (j = 0; j < clipRows[i].length; j++) {
+          if (clipRows[i][j] != '\r') {
+            if (clipRows[i][j].length !== 0) {
+              item[j] = clipRows[i][j];
+            }
+          }
+        }
+        jsonObj.push(item);
+      }
+      for (var i = 0; i < jsonObj.length; i++) {
+        if ((jsonObj.length-1) == i) {
+          $('#pages').val($('#pages').val()+jsonObj[i][0]);
+        } else {
+          $('#pages').val($('#pages').val()+jsonObj[i][0]+",");
+        }
+      }
+    });
+</script>
