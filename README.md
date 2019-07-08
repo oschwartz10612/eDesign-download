@@ -13,9 +13,9 @@ A simple Node js application to download all specified spreads from HJ eDesign s
 1. Keep a spreadsheet of the spread ids and update as you open spreads.
 
 2. Open the app and fill out the required fiends. How do I get these strings? 
-..1. Open eDesign and navigate to a page. In the top menue, click File then "Create High-Res PDF".
-..2. Wait for this new window to load. In the URL bar. Find the ticket ID and the session ID and copy them into the fields.
-..3. The download path is not abslute. Leave as is (it will download into the downloads folder in the project root directory) or change accordingly. 
+.. 1. Open eDesign and navigate to a page. In the top menue, click File then "Create High-Res PDF".
+.. 2. Wait for this new window to load. In the URL bar. Find the ticket ID and the session ID and copy them into the fields.
+.. 3. The download path is not abslute. Leave as is (it will download into the downloads folder in the project root directory) or change accordingly. 
 
 3. Paste from a spreadsheet the spread ids into the spread ID area and click download.
 
