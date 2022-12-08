@@ -12,6 +12,6 @@
   "dependencies": {
     "chrome-launcher": "^0.10.5",
     "ejs": "^2.6.1",
-    "express": "^4.16.4"
+    "express": "^4.18.2"
   }
 }
